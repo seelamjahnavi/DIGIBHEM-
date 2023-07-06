@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="shortcut icon" type="x-icon" href="mesmerize.png">
+
+    <title>Hotel Booking Registration Form</title>
+    <style>
+        h2 {
+            padding: 0;
+            text-align: center;
+            background-color: rgb(171, 249, 246);
+            border-color: rgb(15, 15, 16);
+            border-width: .15em;
+            border-style: double;
+        }
+
+        body {
+
+            text-align: center;
+            width: 100%;
+            height: 170%;
+            margin: 0;
+            background-image: url('background.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            /* Space from this element (entire page) and others*/
+            padding: 0;
+
+        }
+
+        .content {
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+
+        .radio {
+            text-align: center;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        .column {
+            flex: 33.33%;
+            padding: 5px;
+        }
+
+        img {
+            height: 200px;
+            width: 250px;
+            margin: 0px 10px 30px 100px;
+        }
+
+        .glow-on-hover {
+            width: 210px;
+            height: 30px;
+            border: none;
+            outline: none;
+            color: #0e0d0d;
+            background: #111;
+            cursor: pointer;
+            position: relative;
+            z-index: 0;
+            border-radius: 10px;
+        }
+
+        .glow-on-hover:before {
+            content: '';
+            background: linear-gradient(45deg, #ff0000, #ff7300, #b8b513, #287e06, #0f8773, #002bff, #7a00ff, #b91395, #ff0000);
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            background-size: 400%;
+            z-index: -1;
+            filter: blur(5px);
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            animation: glowing 20s linear infinite;
+            opacity: 0;
+            transition: opacity .3s ease-in-out;
+            border-radius: 10px;
+        }
+
+        .glow-on-hover:active {
+            color: #000
+        }
+
+        .glow-on-hover:active:after {
+            background: transparent;
+        }
+
+        .glow-on-hover:hover:before {
+            opacity: 1;
+        }
+
+        .glow-on-hover:after {
+            z-index: -1;
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #abf4fb;
+            left: 0;
+            top: 0;
+            border-radius: 10px;
+        }
+
+        @keyframes glowing {
+            0% {
+                background-position: 0 0;
+            }
+
+            50% {
+                background-position: 400% 0;
+            }
+
+            100% {
+                background-position: 0 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <h1>Hotel Booking Registration Form</h1>
+        <strong>
+            <form id="bookingForm" onsubmit="calculateTotal(event)">
+                <h2>Customer Info</h2>
+                <label for="customerName">Customer Name:</label>
+                <input type="text" id="customerName" required><br>
+
+                <label for="checkInDate">Check-in Date:</label>
+                <input type="date" id="checkInDate" required><br>
+
+                <label for="totalDays">Total No of Days:</label>
+                <input type="number" id="totalDays" required><br>
+
+                <label for="totalPersons">Total No of Persons:</label>
+                <input type="number" id="totalPersons" required><br>
+
+                <h2>Room Information</h2>
+                <label for="roomType">Room Type:</label>
+                <select id="roomType">
+                    <option value="delux">Delux Room</option>
+                    <option value="suite">Suite Room</option>
+                </select>
+
+                <label for="amenities">Amenities:</label>
+                <select id="amenities">
+                    <option value="ac">AC</option>
+                    <option value="locker">Locker</option>
+                </select>
+
+                <h2>Advance Payment</h2>
+                <label for="advanceAmount">Advance Amount:</label>
+                <input type="number" id="advanceAmount" required>
+
+                <h2>Total Cost Calculation</h2>
+                <p id="totalRoomCost">Total Room Cost:</p>
+                <p id="totalAmenitiesCost">Total Amenities Cost:</p>
+                <p id="totalCost">Total Cost:</p>
+
+                <h2>Additional Charges</h2>
+                <p id="extraPersonCost">Per Day Cost for Extra Person: 1000/-</p>
+
+                <button class="glow-on-hover" type="submit">Calculate Total</button><br><br>
+                <button class="glow-on-hover" type="submit">Submit</button>
+        </strong>
+        </form>
+
+        <div id="registrationData" style="display: none;">
+            <h2>Registration Data</h2>
+            <p><strong>Customer Name:</strong> <span id="registeredCustomerName"></span></p>
+            <p><strong>Check-in Date:</strong> <span id="registeredCheckInDate"></span></p>
+            <p><strong>Total No of Days:</strong> <span id="registeredTotalDays"></span></p>
+            <p><strong>Total No of Persons:</strong> <span id="registeredTotalPersons"></span></p>
+            <p><strong>Room Type:</strong> <span id="registeredRoomType"></span></p>
+            <p><strong>Amenities:</strong> <span id="registeredAmenities"></span></p>
+            <p><strong>Advance Amount:</strong> <span id="registeredAdvanceAmount"></span></p>
+            <p><strong>Total Room Cost:</strong> <span id="registeredTotalRoomCost"></span></p>
+            <p><strong>Total Amenities Cost:</strong> <span id="registeredTotalAmenitiesCost"></span></p>
+            <p><strong>Total Cost:</strong> <span id="registeredTotalCost"></span></p>
+            <p><strong>Per Day Cost for Extra Person:</strong> 1000/-</p>
+        </div>
+
+        <script>
+            function calculateTotal(event) {
+                event.preventDefault();
+
+                // Get input values
+                var customerName = document.getElementById('customerName').value;
+                var checkInDate = document.getElementById('checkInDate').value;
+                var totalDays = document.getElementById('totalDays').value;
+                var totalPersons = document.getElementById('totalPersons').value;
+                var roomType = document.getElementById('roomType').value;
+                var amenities = document.getElementById('amenities').value;
+                var advanceAmount = document.getElementById('advanceAmount').value;
+
+                // Calculate room cost
+                var roomRate = (roomType === 'delux') ? 2500 : 4000;
+                var totalRoomCost = roomRate * totalDays;
+
+                // Calculate amenities cost
+                var amenitiesCost = 0;
+                if (amenities === 'ac') {
+                    amenitiesCost += 1000;
+                }
+                if (amenities === 'locker') {
+                    amenitiesCost += 300;
+                }
+                var totalAmenitiesCost = amenitiesCost * totalDays;
+
+                // Calculate total cost
+                var totalCost = totalRoomCost + totalAmenitiesCost;
+
+                // Display calculated values
+                document.getElementById('totalRoomCost').textContent = 'Total Room Cost: ' + totalRoomCost + '/-';
+                document.getElementById('totalAmenitiesCost').textContent = 'Total Amenities Cost: ' + totalAmenitiesCost + '/-';
+                document.getElementById('totalCost').textContent = 'Total Cost: ' + totalCost + '/-';
+
+                // Display registration data
+                document.getElementById('registeredCustomerName').textContent = customerName;
+                document.getElementById('registeredCheckInDate').textContent = checkInDate;
+                document.getElementById('registeredTotalDays').textContent = totalDays;
+                document.getElementById('registeredTotalPersons').textContent = totalPersons;
+                document.getElementById('registeredRoomType').textContent = roomType;
+                document.getElementById('registeredAmenities').textContent = amenities;
+                document.getElementById('registeredAdvanceAmount').textContent = advanceAmount;
+                document.getElementById('registeredTotalRoomCost').textContent = totalRoomCost;
+                document.getElementById('registeredTotalAmenitiesCost').textContent = totalAmenitiesCost;
+                document.getElementById('registeredTotalCost').textContent = totalCost;
+
+                // Show the registration data section
+                document.getElementById('registrationData').style.display = 'block';
+            }
+        </script>
+    </div>
+</body>
+
+</html>
